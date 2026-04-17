@@ -29,7 +29,8 @@
         </h4>
       </div>
       <div>
-        <RadzenButton class="undoButton" Icon="undo" MouseEnter="@(args => ShowTooltip(args, "Undo latest changes"))" />
+        <RadzenButton class="undoButton" Icon="undo" MouseEnter="@(args =>    ShowTooltip(args, "Undo latest changes"))" 
+        Click="@Undo" />
       </div>
     </RadzenCard>
     <div class="Handler row m-2">
@@ -55,7 +56,7 @@
               <RadzenDropDown TValue="Users" Data="@(Enum.GetValues<Users>())" @bind-Value="@_selectedUser" />
             </RadzenFormField>
             <div>
-              <RadzenButton Text="Add task" Icon="add" Click="@AddTask" />
+              <RadzenButton Text="Add task" Icon="add" Click="@AddTaskAsync" />
             </div>
           </ChildContent>
         </RadzenFieldset>
@@ -68,14 +69,16 @@
             </RadzenStack>
           </HeaderTemplate>
           <ChildContent>
-            <RadzenDataGrid Data="@_taskQueue">
+            <RadzenDataGrid @ref="@_grid" TValue="TaskHandler.Models.Task" AllowFiltering="true" Data="@_taskQueue">
               <Columns>
-                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Name)" Title="Name" />
-                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Description)" Title="Description" />
-                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Severity)" Title="Severity" />
-                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Owner)" Title="Owner" />
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Name)" Title="Task Name" />
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Description)" Title="Task Description" />
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Severity)" Title="Task Severity" />
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Owner)" Title="Task Owner" />
               </Columns>
             </RadzenDataGrid>
+            <hr />
+            <RadzenButton Text="Complete task" Click="@CompleteTask" />
           </ChildContent>
         </RadzenFieldset>
       </div>
