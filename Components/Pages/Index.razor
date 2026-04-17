@@ -1,0 +1,84 @@
+﻿@rendermode InteractiveServer
+@page "/"
+
+<style>
+  .Handler {
+    height: 87%;
+  }
+
+  .undoButton {
+    background-color: white !important;
+    color: var(--rz-primary) !important;
+    border-radius: 50%;
+    transition: ease-in-out 0.2s;
+  }
+
+  .undoButton:hover {
+    transform: scale(1.15);
+  }
+</style>
+
+<RadzenTooltip />
+
+<div class="w-100 h-100 d-flex justify-content-center align-items-center">
+  <RadzenCard class="h-75 w-75 p-0">
+    <RadzenCard class="p-3 d-flex align-items-center" style="background-color: var(--rz-primary);">
+      <div style="margin-right: auto;">
+        <h4 style='color:white' class="h-100 m-0">
+          <b>Task handler</b>
+        </h4>
+      </div>
+      <div>
+        <RadzenButton class="undoButton" Icon="undo" MouseEnter="@(args => ShowTooltip(args, "Undo latest changes"))" />
+      </div>
+    </RadzenCard>
+    <div class="Handler row m-2">
+      <div class="col-6 h-100">
+        <RadzenFieldset AllowCollapse="false" class="h-100">
+          <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.25rem">
+              <RadzenIcon Icon="Task" /><b>Task information</b>
+            </RadzenStack>
+          </HeaderTemplate>
+          <ChildContent>
+            <RadzenFormField AllowFloatingLabel="false" Text="Name" class="w-100 mb-1">
+              <RadzenTextBox @bind-Value="@_selectedName" />
+            </RadzenFormField>
+            <RadzenFormField AllowFloatingLabel="false" Text="Description" class="w-100 mb-1">
+              <RadzenTextArea @bind-Value="@_selectedDescription" style="resize:none;" />
+            </RadzenFormField>
+            <RadzenFormField AllowFloatingLabel="false" Text="Severity" class="w-100 mb-1">
+              <RadzenDropDown TValue="TaskSeverity" Data="@(Enum.GetValues<TaskSeverity>())"
+              @bind-Value="@_selectedSeverity" />
+            </RadzenFormField>
+            <RadzenFormField AllowFloatingLabel="false" Text="Owner" class="w-100 mb-1">
+              <RadzenDropDown TValue="Users" Data="@(Enum.GetValues<Users>())" @bind-Value="@_selectedUser" />
+            </RadzenFormField>
+            <div>
+              <RadzenButton Text="Add task" Icon="add" Click="@AddTask" />
+            </div>
+          </ChildContent>
+        </RadzenFieldset>
+      </div>
+      <div class="col-6 h-100">
+        <RadzenFieldset AllowCollapse="false" class="h-100">
+          <HeaderTemplate>
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.25rem">
+              <RadzenIcon Icon="control_camera" /><b>Control panel</b>
+            </RadzenStack>
+          </HeaderTemplate>
+          <ChildContent>
+            <RadzenDataGrid Data="@_taskQueue">
+              <Columns>
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Name)" Title="Name" />
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Description)" Title="Description" />
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Severity)" Title="Severity" />
+                <RadzenDataGridColumn Property="@nameof(TaskHandler.Models.Task.Owner)" Title="Owner" />
+              </Columns>
+            </RadzenDataGrid>
+          </ChildContent>
+        </RadzenFieldset>
+      </div>
+    </div>
+  </RadzenCard>
+</div>
